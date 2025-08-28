@@ -10,7 +10,7 @@
    <!--
       El recycler view es obligatorio si quiero hacer lista
       Todo recycler view necesita un item_view
-      Todo recycler view necesita un adapter
+      Todo recycler view necesita una clase adapter
     -->
 
    <androidx.recyclerview.widget.RecyclerView

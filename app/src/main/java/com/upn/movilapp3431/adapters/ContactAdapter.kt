@@ -35,7 +35,6 @@ class ContactAdapter(val data: List<Contact>): Adapter<ContactViewHolder>() {
             Toast.makeText(view.context, "Hola ${item.name}", Toast.LENGTH_SHORT).show()
         }
 
-
         tvNombre.text = "Mi nombre es: ${item.name}"
         tvPhone.text = "Mi telefono es: ${item.phone}"
 
