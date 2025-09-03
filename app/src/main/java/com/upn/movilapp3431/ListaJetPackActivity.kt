@@ -38,10 +38,24 @@ class ListaJetPackActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val transactions = listOf(
-            Transaction(title="Compra en Supermercado", amount = 150.75, date="28/08/25 07:30", type="gasto"),
-            Transaction(title="Pago de Servicios", amount = 80.50, date="27/08/25 10:00", type="gasto"),
-            Transaction(title="Venta de Artículo", amount = 200.00, date="26/08/25 15:45", type="ingreso"),
+        val contacts = listOf(
+            Contact("Juan Perez", "123456789"),
+            Contact("Maria Gomez", "987654321"),
+            Contact("Carlos Sanchez", "555555555"),
+            Contact("Ana Torres", "444444444"),
+            Contact("Luis Ramirez", "333333333"),
+            Contact("Sofia Fernandez", "222222222"),
+            Contact("Miguel Diaz", "111111111"),
+            Contact("Laura Morales", "666666666"),
+            Contact("Diego Castro", "777777777"),
+            Contact("Elena Rojas", "888888888"),
+            Contact("Pedro Vargas", "999999999"),
+            Contact("Marta Silva", "000000000"),
+            Contact("Jorge Herrera", "121212121"),
+            Contact("Lucia Mendoza", "343434343"),
+            Contact("Andres Fuentes", "565656565"),
+            Contact("Carmen Ortiz", "787878787"),
+            Contact("Rafael Aguilar", "909090909"),
         )
 
         setContent {
@@ -53,36 +67,30 @@ class ListaJetPackActivity : ComponentActivity() {
                             .padding(8.dp)
                     ) {
                         LazyColumn {
-                        items(transactions.size) { index ->
-                            val transaction = transactions[index]
+                        items(contacts.size) { index ->
+                            val contact = contacts[index]
                             val context = LocalContext.current
                             Card(
                                 modifier = Modifier.fillMaxWidth()
                                     .padding(vertical = 10.dp, horizontal = 4.dp)
                                     .clickable{
                                         Toast
-                                            .makeText(context, "Seleccionó: ${transaction.title}", Toast.LENGTH_SHORT)
+                                            .makeText(context, "Seleccionó: ${contact.name}", Toast.LENGTH_SHORT)
                                             .show()
                                     },
                                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                             ) {
                                 Column {
                                     Text(
-                                        text = transaction.title,
+                                        text = contact.name,
                                         modifier = Modifier.padding(4.dp)
                                     )
-                                    Row {
+
                                         Text(
-                                            text = transaction.date,
+                                            text = contact.phone,
                                             modifier = Modifier.padding(4.dp)
                                         )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Text(
-                                            text = "S/${transaction.amount}",
-                                            color = if (transaction.type == "gasto") Color.Red else Color.Blue,
-                                            modifier = Modifier.padding(4.dp)
-                                        )
-                                    }
+
 
 
                                 }
