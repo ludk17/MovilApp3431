@@ -1,6 +1,7 @@
 package com.upn.movilapp3431
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,10 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.upn.movilapp3431.ui.theme.MovilApp3431Theme
 import com.upn.movilapp3431.viewmodels.ContactListViewModel
+import java.util.prefs.Preferences
 
 class FirebaseRealtimeDatabaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val activity = this;
         enableEdgeToEdge()
         setContent {
             MovilApp3431Theme {
@@ -39,21 +42,17 @@ class FirebaseRealtimeDatabaseActivity : ComponentActivity() {
                         contentAlignment = Alignment.Center
                     ) {
                         val preferences = getSharedPreferences("com.upn.movilapp3431", MODE_PRIVATE)
-                        val useramePref = preferences.getString("USERNAME",  null)
+                        var userRole = preferences.getString("ROLE",  "")
+
+                        if (userRole == "admin") {
+                            Column {
+                                LogOut(preferences, activity)
+                                Text("Esto es el rol de Admin")
+                            }
+                        } else
 
                         Column {
-                            Button(onClick = {
-
-                                preferences.edit().putBoolean("ESTA_LOGUEADO", false).apply()
-                                finish()
-                                val intent = Intent(context, LoginActivity::class.java)
-                                context.startActivity(intent)
-
-
-
-                            }) {
-                                Text(text = "Cerrar Sesión $useramePref")
-                            }
+                            LogOut(preferences, activity)
                             ListaElementos(viewModel)
                         }
 
@@ -61,6 +60,22 @@ class FirebaseRealtimeDatabaseActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LogOut(preferences: SharedPreferences, activity: FirebaseRealtimeDatabaseActivity) {
+    val context = LocalContext.current
+
+    Button(onClick = {
+
+        preferences.edit().putBoolean("ESTA_LOGUEADO", false).apply()
+        activity.finish()
+        val intent = Intent(context, LoginActivity::class.java)
+        context.startActivity(intent)
+
+    }) {
+        Text(text = "Cerrar Sesión")
     }
 }
 

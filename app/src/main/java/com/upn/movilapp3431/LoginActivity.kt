@@ -2,6 +2,7 @@ package com.upn.movilapp3431
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,6 +35,12 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.upn.movilapp3431.ui.theme.MovilApp3431Theme
+import androidx.core.content.edit
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.upn.movilapp3431.entities.Contact
+import com.upn.movilapp3431.entities.User
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,19 +107,68 @@ class LoginActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-//                                val database = Firebase.database
-//                                val usersRef = database.getReference("users")
+                                val database = Firebase.database
+                                val usersRef = database.getReference("users")
+
+                                usersRef.addValueEventListener(object : ValueEventListener {
+                                    var loggedUser: User? = null
+                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                        for (item in dataSnapshot.children) {
+                                            val user = item.getValue(User::class.java)!!
+                                             if (user.password == password && user.username == username) {
+                                                 loggedUser = user
+                                             }
+                                        }
+
+                                        if (loggedUser == null) {
+                                            Toast.makeText(context, "Usuario y contraseña incorrectos", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(context, "Usuario correcto", Toast.LENGTH_SHORT).show()
+                                        }
+
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+
+                                    }
+                                })
+
+
+
+//                                val userRef = usersRef.child(username)
+//                                userRef.get().addOnSuccessListener { dataSnapshot ->
+//                                    if (dataSnapshot.exists()) {
+//
+//                                        Log.i("MAIN_APP", dataSnapshot.value.toString())
+//
+//                                        val user = dataSnapshot.getValue(User::class.java)!!
+//
+//                                        if (user.password == password) {
+//                                            preferences.edit {
+//                                                putBoolean("ESTA_LOGUEADO", true)
+//                                                putString("USERNAME", username)
+//                                                putString("ROLE", user.role)
+//                                            }
+//
+//                                            val intent = Intent(
+//                                                context,
+//                                                FirebaseRealtimeDatabaseActivity::class.java
+//                                            )
+//                                            context.startActivity(intent)
+//                                            finish()
+//                                        } else {
+//                                            Toast.makeText(context, "Usuario y contraseña incorrectos", Toast.LENGTH_SHORT).show()
+//                                        }
+//
+//                                    } else {
+//                                        Log.i("MAIN_APP", "No existe $username")
+//                                        Toast.makeText(context, "Usuario y contraseña incorrectos", Toast.LENGTH_SHORT).show()
+//                                    }
+//                                }
 
 
                                 // validar contra firebase
-                                val editor = preferences.edit()
-                                editor.putBoolean("ESTA_LOGUEADO", true)
-                                editor.putString("USERNAME", username)
-                                editor.apply()
 
-                                val intent = Intent(context, FirebaseRealtimeDatabaseActivity::class.java)
-                                context.startActivity(intent)
-                                finish()
 
                             },
                             modifier = Modifier.padding(top = 16.dp)
