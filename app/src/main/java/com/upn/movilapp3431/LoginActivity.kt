@@ -1,5 +1,6 @@
 package com.upn.movilapp3431
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -30,6 +31,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import com.upn.movilapp3431.ui.theme.MovilApp3431Theme
 
 class LoginActivity : ComponentActivity() {
@@ -38,12 +41,7 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val preferences = getSharedPreferences("com.upn.movilapp3431", MODE_PRIVATE)
-
-        // como se edita o agrega valores a un shared preferences
-//        val editor = preferences.edit()
-//        editor.putString("USERNAME", "johndoe")
-//        editor.apply() // guardar los cambios
-
+        val estaLogueado = preferences.getBoolean("ESTA_LOGUEADO", false)
 
 //        // como accedo a los valores del preferences
 //        val estaLogueado = preferences.getBoolean("ESTA_LOGUEADO", false)
@@ -52,7 +50,14 @@ class LoginActivity : ComponentActivity() {
         setContent {
             MovilApp3431Theme {
 
-                val context = LocalContext.current;
+                val context = LocalContext.current
+
+                if (estaLogueado) {
+                    val intent = Intent(context, FirebaseRealtimeDatabaseActivity::class.java)
+                    context.startActivity(intent)
+                    finish()
+                }
+
 
                 var username by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
@@ -95,14 +100,19 @@ class LoginActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
+//                                val database = Firebase.database
+//                                val usersRef = database.getReference("users")
+
+
                                 // validar contra firebase
-                                // si credenciales son correctas
-                                // guardar en shared preferences que ya inició sesión
                                 val editor = preferences.edit()
                                 editor.putBoolean("ESTA_LOGUEADO", true)
                                 editor.putString("USERNAME", username)
-                                editor.apply() // guardar los cambios
+                                editor.apply()
 
+                                val intent = Intent(context, FirebaseRealtimeDatabaseActivity::class.java)
+                                context.startActivity(intent)
+                                finish()
 
                             },
                             modifier = Modifier.padding(top = 16.dp)
