@@ -39,6 +39,7 @@ import androidx.core.content.edit
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.firestore
 import com.upn.movilapp3431.entities.Contact
 import com.upn.movilapp3431.entities.User
 
@@ -50,9 +51,35 @@ class LoginActivity : ComponentActivity() {
         val preferences = getSharedPreferences("com.upn.movilapp3431", MODE_PRIVATE)
         val estaLogueado = preferences.getBoolean("ESTA_LOGUEADO", false)
 
-//        // como accedo a los valores del preferences
-//        val estaLogueado = preferences.getBoolean("ESTA_LOGUEADO", false)
-//        val username = preferences.getString("USERNAME",  null)
+        val db = Firebase.firestore
+        /* Buscar Contacts */
+        db.collection("contacts")
+            .whereEqualTo("name", "Luis")
+            .get()
+            .addOnSuccessListener { result ->
+                for(item in result) {
+                    val contact = item.toObject(Contact::class.java)
+                    Log.i("MAIN_APP", contact.toString())
+                }
+            }.addOnFailureListener { error ->
+                Log.e("MAIN_APP", "Error al obtener los contactos", error)
+            }
+
+
+
+        /* Crear un usuario en FireStore */
+//        val contact = Contact("2", "Carlos", "999999", "")
+//        Log.i("MAIN_APP", "Se va a crear el contacto")
+//        db.collection("contacts")
+//            .add(contact)
+//            .addOnSuccessListener{ document ->
+//                Log.i("MAIN_APP", "Se creo el contacto corrctamente")
+//            }.addOnFailureListener { error ->
+//                Log.e("MAIN_APP", "Error al crear el contacto", error)
+//            }
+
+
+
 
         setContent {
             MovilApp3431Theme {
@@ -107,31 +134,31 @@ class LoginActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-                                val database = Firebase.database
-                                val usersRef = database.getReference("users")
-
-                                usersRef.addValueEventListener(object : ValueEventListener {
-                                    var loggedUser: User? = null
-                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                        for (item in dataSnapshot.children) {
-                                            val user = item.getValue(User::class.java)!!
-                                             if (user.password == password && user.username == username) {
-                                                 loggedUser = user
-                                             }
-                                        }
-
-                                        if (loggedUser == null) {
-                                            Toast.makeText(context, "Usuario y contraseña incorrectos", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(context, "Usuario correcto", Toast.LENGTH_SHORT).show()
-                                        }
-
-                                    }
-
-                                    override fun onCancelled(error: DatabaseError) {
-
-                                    }
-                                })
+//                                val database = Firebase.database
+//                                val usersRef = database.getReference("users")
+//
+//                                usersRef.addValueEventListener(object : ValueEventListener {
+//                                    var loggedUser: User? = null
+//                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                                        for (item in dataSnapshot.children) {
+//                                            val user = item.getValue(User::class.java)!!
+//                                             if (user.password == password && user.username == username) {
+//                                                 loggedUser = user
+//                                             }
+//                                        }
+//
+//                                        if (loggedUser == null) {
+//                                            Toast.makeText(context, "Usuario y contraseña incorrectos", Toast.LENGTH_SHORT).show()
+//                                        } else {
+//                                            Toast.makeText(context, "Usuario correcto", Toast.LENGTH_SHORT).show()
+//                                        }
+//
+//                                    }
+//
+//                                    override fun onCancelled(error: DatabaseError) {
+//
+//                                    }
+//                                })
 
 
 
