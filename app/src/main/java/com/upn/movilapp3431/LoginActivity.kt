@@ -36,6 +36,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.upn.movilapp3431.ui.theme.MovilApp3431Theme
 import androidx.core.content.edit
+import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -51,19 +52,32 @@ class LoginActivity : ComponentActivity() {
         val preferences = getSharedPreferences("com.upn.movilapp3431", MODE_PRIVATE)
         val estaLogueado = preferences.getBoolean("ESTA_LOGUEADO", false)
 
-        val db = Firebase.firestore
-        /* Buscar Contacts */
-        db.collection("contacts")
-            .whereEqualTo("name", "Luis")
-            .get()
-            .addOnSuccessListener { result ->
-                for(item in result) {
-                    val contact = item.toObject(Contact::class.java)
-                    Log.i("MAIN_APP", contact.toString())
-                }
-            }.addOnFailureListener { error ->
-                Log.e("MAIN_APP", "Error al obtener los contactos", error)
-            }
+        /**/
+
+
+
+//        auth.createUserWithEmailAndPassword("miguel@gmail.com", "1234567")
+//            .addOnSuccessListener { task ->
+//                Log.i("MAIN_APP", task.user!!.uid)
+//            }
+//            .addOnFailureListener { error ->
+//                Log.e("MAIN_APP", "Error al crear el usuario", error)
+//            }
+
+
+//        val db = Firebase.firestore
+//        /* Buscar Contacts */
+//        db.collection("contacts")
+//            .whereEqualTo("name", "Luis")
+//            .get()
+//            .addOnSuccessListener { result ->
+//                for(item in result) {
+//                    val contact = item.toObject(Contact::class.java)
+//                    Log.i("MAIN_APP", contact.toString())
+//                }
+//            }.addOnFailureListener { error ->
+//                Log.e("MAIN_APP", "Error al obtener los contactos", error)
+//            }
 
 
 
@@ -133,6 +147,18 @@ class LoginActivity : ComponentActivity() {
                         )
                         Button(
                             onClick = {
+
+                                val auth = Firebase.auth
+                                auth.signInWithEmailAndPassword(username, password)
+                                    .addOnSuccessListener { task ->
+                                        Log.i("MAIN_APP", "Usuario logueado ${task.user?.uid}")
+                                        // guardar en shared prefrences
+
+                                    }
+                                    .addOnFailureListener { error ->
+                                        Log.e("MAIN_APP", "Error al loguear el usuario", error)
+
+                                    }
 
 //                                val database = Firebase.database
 //                                val usersRef = database.getReference("users")
